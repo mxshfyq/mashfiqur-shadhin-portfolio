@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mashfiqur Shadhin Mon | Business Administration, Operations & Strategy</title>
+    <meta name="description" content="Portfolio of Mashfiqur Shadhin Mon — BBA Student at BRAC University, Administrative & Operations Assistant at Aryan Sourcing Pvt Ltd, and Esports Management & Campus Ambassador.">
+    
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Three.js (3D Graphics Engine) & GLTFLoader for optional external 3D models -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                            950: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar & Glass Utilities */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.3); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(30, 58, 138, 0.6); }
+
+        #three-canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.75;
+        }
+
+        .glass-card {
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        /* 3D Card Tilt Perspective */
+        .tilt-wrapper {
+            perspective: 1000px;
+        }
+        .tilt-card {
+            transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        /* Typewriter Cursor */
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Instant 5ms Theme Transition */
+        body, header, section, article, footer, input, textarea, button, .glass-card {
+            transition-duration: 5ms !important;
+        }
+
+        /* Print / ATS Resume Mode */
+        @media print {
+            .no-print, #three-canvas-container { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: #ffffff !important; color: #000000 !important; font-size: 10.5pt; }
+            section { page-break-inside: avoid; margin-bottom: 1rem !important; padding: 0 !important; }
+            .glass-card { background: #ffffff !important; border: 1px solid #e2e8f0 !important; box-shadow: none !important; }
+        }
+        .print-only { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased selection:bg-navy-600 selection:text-white">
+
+    <!-- =====================================================================
+         EASY CONFIGURATION BLOCK (EDIT LINKS, IMAGE, OR 3D MODEL URL HERE)
+         ===================================================================== -->
+    <script>
+        const PORTFOLIO_CONFIG = {
+            // 1. PROFILE IMAGE:
+            // Put your photo in the same Netlify folder named "profile.jpg", OR paste any direct image URL below.
+            profileImageUrl: "profile.jpg",
+
+            // 2. OPTIONAL EXTERNAL 3D MODEL (.glb / .gltf):
+            // Leave empty ("") to use the built-in interactive 3D geometric sculpture.
+            // Or paste a public .glb URL (e.g. from Sketchfab/Poly Pizza/GitHub) to render your own 3D object!
+            customGlbModelUrl: "",
+
+            // 3. SOCIAL & CONTACT LINKS:
+            email: "mashshad027@gmail.com",
+            phone: "+880 1886 918693",
+            location: "Dhaka, Bangladesh",
+            linkedinUrl: "https://www.linkedin.com/in/mashfiqur-shadhin-956880333/",
+            githubUrl: "https://github.com/", // Paste your GitHub profile URL here when ready
+
+            // 4. DYNAMIC HERO ROLES:
+            roles: [
+                "BBA Undergraduate @ BRACU",
+                "Operations & Admin Specialist",
+                "Esports Management & PR",
+                "Corporate Outreach & Strategy"
+            ]
+        };
+    </script>
+
+    <!-- Interactive 3D Background Canvas (Mouse & Touch Responsive) -->
+    <div id="three-canvas-container" aria-hidden="true"></div>
+
+    <!-- ATS Print Header (Appears cleanly when printing/saving as PDF) -->
+    <div class="print-only max-w-4xl mx-auto pt-6 pb-4 border-b-2 border-slate-900 mb-6">
+        <h1 class="text-2xl font-bold uppercase tracking-wide">MASHFIQUR SHADHIN MON</h1>
+        <p class="text-sm text-slate-700 mt-1">
+            Dhaka, Bangladesh &bull; +880 1886 918693 &bull; mashshad027@gmail.com &bull; linkedin.com/in/mashfiqur-shadhin-956880333/
+        </p>
+    </div>
+
+    <!-- Sticky Minimalist Navbar -->
+    <header class="no-print fixed top-0 inset-x-0 z-40 glass-card bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/70 dark:border-slate-800/70 transition-colors">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand Monogram -->
+            <a href="#top" class="flex items-center space-x-2.5 group">
+                <div class="w-9 h-9 rounded-xl bg-navy-900 dark:bg-navy-600 text-white font-display font-bold text-sm flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+                    MSM
+                </div>
+                <span class="font-display font-bold text-base tracking-tight text-slate-900 dark:text-white">
+                    Mashfiqur<span class="text-navy-600">.</span>
+                </span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-7 text-sm font-medium text-slate-600 dark:text-slate-300">
+                <a href="#about" class="hover:text-navy-700 dark:hover:text-navy-400 transition-colors">Summary</a>
+                <a href="#experience" class="hover:text-navy-700 dark:hover:text-navy-400 transition-colors">Experience</a>
+                <a href="#education" class="hover:text-navy-700 dark:hover:text-navy-400 transition-colors">Education</a>
+                <a href="#skills" class="hover:text-navy-700 dark:hover:text-navy-400 transition-colors">Skills</a>
+                <a href="#achievements" class="hover:text-navy-700 dark:hover:text-navy-400 transition-colors">Activities</a>
+                <a href="#contact" class="hover:text-navy-700 dark:hover:text-navy-400 transition-colors">Contact</a>
+            </nav>
+
+            <!-- Controls: 3D Interaction Toggle, Theme Toggle, Print CV, Mobile Menu -->
+            <div class="flex items-center space-x-2">
+            <!-- Controls: 3D Interaction Toggle, Prominent Dark/Light Mode Button, Mobile Menu -->
+            <div class="flex items-center space-x-2.5">
+                <!-- 3D Shape Switcher Button -->
+                <button id="cycle-3d-btn" title="Switch 3D Geometry" class="p-2 sm:px-3 sm:py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 text-slate-700 dark:text-slate-300 hover:border-navy-600 text-xs font-medium flex items-center space-x-1.5">
+                    <i data-lucide="box" class="w-4 h-4 text-navy-600 dark:text-blue-400"></i>
+                    <span class="hidden lg:inline">3D View</span>
+                </button>
+
+                <!-- Prominent Instant Dark / Light Mode Toggle Button -->
+                <button id="theme-toggle" aria-label="Toggle Dark or Light Mode" class="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-navy-900 hover:bg-navy-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white border border-transparent dark:border-slate-700 text-xs font-semibold shadow-sm cursor-pointer">
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-blue-200"></i>
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+                    <span class="block dark:hidden">Dark Mode</span>
+                    <span class="hidden dark:block">Light Mode</span>
+                </button>
+
+                <!-- Mobile Hamburger -->
+                <button id="mobile-menu-btn" aria-label="Open Navigation Menu" class="md:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Slide-Down Drawer -->
+        <div id="mobile-drawer" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 px-4 py-4 space-y-2">
+            <a href="#about" class="mobile-link block px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-900">Summary</a>
+            <a href="#experience" class="mobile-link block px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-900">Experience & Leadership</a>
+            <a href="#education" class="mobile-link block px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-900">Education</a>
+            <a href="#skills" class="mobile-link block px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-900">Skills Matrix</a>
+            <a href="#achievements" class="mobile-link block px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-900">Activities & Achievements</a>
+            <a href="#contact" class="mobile-link block px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-900">Contact</a>
+            <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
+                <button id="mobile-theme-toggle" class="w-full flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl bg-navy-900 dark:bg-slate-800 text-white text-sm font-semibold">
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-blue-200"></i>
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+                    <span class="block dark:hidden">Switch to Dark Mode</span>
+                    <span class="hidden dark:block">Switch to Light Mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main id="top" class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 space-y-24">
+
+        <!-- HERO SECTION -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            <!-- Left Text Column -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full glass-card bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-300 uppercase">Open to Corporate & Operations Opportunities</span>
+                </div>
+
+                <div class="space-y-2">
+                    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
+                        Mashfiqur <br class="hidden sm:inline">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-navy-900 via-navy-600 to-blue-500 dark:from-blue-400 dark:via-indigo-300 dark:to-sky-400">
+                            Shadhin Mon
+                        </span>
+                    </h1>
+                    <!-- Dynamic Role Typewriter -->
+                    <div class="h-8 flex items-center text-lg sm:text-xl font-semibold text-navy-800 dark:text-blue-400">
+                        <span id="role-typewriter"></span><span class="cursor-blink ml-0.5 font-light">|</span>
+                    </div>
+                </div>
+
+                <p class="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+                    Detail-oriented undergraduate Business Administration student at <strong class="font-semibold text-slate-900 dark:text-white">BRAC University</strong> with hands-on experience in administrative operations, financial tracking, HR support, visa/passport processing, and large-scale event coordination.
+                </p>
+
+                <!-- Quick Contact & Location Pills -->
+                <div class="flex flex-wrap gap-2.5 text-xs sm:text-sm">
+                    <span class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-navy-600"></i>
+                        <span>Dhaka, Bangladesh</span>
+                    </span>
+                    <button onclick="copyEmail()" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-navy-600 transition-colors">
+                        <i data-lucide="mail" class="w-3.5 h-3.5 text-navy-600"></i>
+                        <span id="email-pill-text">mashshad027@gmail.com</span>
+                        <i data-lucide="copy" class="w-3 h-3 opacity-60"></i>
+                    </button>
+                    <a href="tel:+8801886918693" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-navy-600 transition-colors">
+                        <i data-lucide="phone" class="w-3.5 h-3.5 text-navy-600"></i>
+                        <span>+880 1886 918693</span>
+                    </a>
+                </div>
+
+                <!-- Primary CTA Buttons -->
+                <div class="no-print flex flex-wrap items-center gap-3 pt-2">
+                    <a href="#contact" class="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-navy-900 hover:bg-navy-800 dark:bg-navy-600 dark:hover:bg-navy-500 text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all">
+                        <span>Get in Touch</span>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                    </a>
+                    <a id="hero-linkedin" href="https://www.linkedin.com/in/mashfiqur-shadhin-956880333/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 px-5 py-3 rounded-xl glass-card bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-navy-600 text-slate-800 dark:text-slate-200 font-semibold text-sm transition-all">
+                        <i data-lucide="linkedin" class="w-4 h-4 text-navy-600"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a id="hero-github" href="https://github.com/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 px-4 py-3 rounded-xl glass-card bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-navy-600 text-slate-800 dark:text-slate-200 font-semibold text-sm transition-all">
+                        <i data-lucide="github" class="w-4 h-4"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Column: 3D Interactive Portrait Card -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="tilt-wrapper w-full max-w-sm">
+                    <div id="portrait-tilt-card" class="tilt-card relative rounded-3xl p-3 glass-card bg-white/80 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 shadow-2xl">
+                        <!-- Portrait Aspect Box -->
+                        <div class="relative aspect-[4/5] w-full rounded-2xl overflow-hidden bg-slate-900">
+                            <img 
+                                id="profile-photo"
+                                src="profile.jpg" 
+                                alt="Mashfiqur Shadhin Mon" 
+                                class="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
+                                onerror="this.style.display='none'; document.getElementById('profile-fallback').classList.remove('hidden');"
+                            >
+                            <!-- Clean Monogram Fallback if profile.jpg isn't placed in folder yet -->
+                            <div id="profile-fallback" class="hidden w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-navy-950 to-navy-900 text-white p-6 text-center">
+                                <div class="w-24 h-24 rounded-full border-2 border-blue-400/40 bg-white/5 flex items-center justify-center font-display text-3xl font-extrabold tracking-wider mb-4">
+                                    MSM
+                                </div>
+                                <p class="font-display font-bold text-lg">Mashfiqur Shadhin Mon</p>
+                                <p class="text-xs text-blue-300 mt-1">Place <code class="bg-white/10 px-1.5 py-0.5 rounded">profile.jpg</code> in folder to display photo</p>
+                            </div>
+
+                            <!-- Subtle Bottom Gradient Overlay Badge -->
+                            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent p-5 text-white">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-xs font-medium text-blue-300 uppercase tracking-wider">BRAC University</p>
+                                        <p class="text-sm font-bold">BBA Undergrad &bull; Class of 2029</p>
+                                    </div>
+                                    <div class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20">
+                                        <i data-lucide="briefcase" class="w-4 h-4 text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROFESSIONAL SUMMARY & KEY METRICS -->
+        <section id="about" class="space-y-6">
+            <div class="glass-card bg-white/85 dark:bg-slate-900/85 rounded-3xl p-6 sm:p-10 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200/70 dark:border-slate-800">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-navy-600 dark:text-blue-400">01 / Profile</span>
+                        <h2 class="font-display text-2xl sm:text-3xl font-bold mt-1">Professional Summary</h2>
+                    </div>
+                    <span class="text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 self-start md:self-auto">
+                        Operations &bull; Finance & HR &bull; Corporate PR
+                    </span>
+                </div>
+
+                <p class="mt-6 text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
+                    Motivated and detail-oriented undergraduate Business Administration student with hands-on experience in administrative operations, financial tracking, HR support, and project coordination. Proven ability to manage digital documentation, visa and passport processing, and corporate communications with high accuracy. Eager to bring strong organizational, analytical, and interpersonal skills to a dynamic corporate role.
+                </p>
+
+                <!-- 3 Clean Highlight Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+                    <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800">
+                        <div class="flex items-center space-x-2 text-navy-700 dark:text-blue-400 font-semibold text-sm mb-1">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span>Operations & Compliance</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">End-to-end online visa/passport documentation, portal operations, and digital workflow management.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800">
+                        <div class="flex items-center space-x-2 text-navy-700 dark:text-blue-400 font-semibold text-sm mb-1">
+                            <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                            <span>Finance & HR Support</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">Expense tracking, bookkeeping support, employee record-keeping, and staff onboarding.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800">
+                        <div class="flex items-center space-x-2 text-navy-700 dark:text-blue-400 font-semibold text-sm mb-1">
+                            <i data-lucide="megaphone" class="w-4 h-4"></i>
+                            <span>PR & Sponsorships</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">Corporate sponsorship outreach, inter-university event pipelines, and brand representation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE & LEADERSHIP -->
+        <section id="experience" class="space-y-8">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-navy-600 dark:text-blue-400">02 / Career & Roles</span>
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold mt-1">Experience & Leadership</h2>
+                </div>
+                <!-- Interactive Filter Tabs -->
+                <div class="no-print inline-flex p-1 rounded-xl bg-slate-200/70 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 self-start">
+                    <button onclick="filterExperience('all', this)" class="exp-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm transition-all">All Roles</button>
+                    <button onclick="filterExperience('corporate', this)" class="exp-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-all">Corporate</button>
+                    <button onclick="filterExperience('leadership', this)" class="exp-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-all">Leadership</button>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Role 1: Aryan Sourcing Pvt Ltd -->
+                <article data-exp-type="corporate" class="exp-card glass-card bg-white/85 dark:bg-slate-900/85 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-navy-600/50 transition-all">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200/70 dark:border-slate-800">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-2xl bg-navy-900/10 dark:bg-blue-500/10 text-navy-800 dark:text-blue-400 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="building-2" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white">Administrative & Operations Assistant</h3>
+                                <p class="text-sm font-semibold text-navy-700 dark:text-blue-400">Aryan Sourcing Pvt Ltd &bull; Dhaka, Bangladesh</p>
+                            </div>
+                        </div>
+                        <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/60 text-navy-800 dark:text-blue-300 border border-blue-200/70 dark:border-blue-800/60 self-start sm:self-center">
+                            <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+                            <span>Corporate Operations</span>
+                        </span>
+                    </div>
+
+                    <ul class="mt-5 space-y-2.5 text-sm text-slate-600 dark:text-slate-300">
+                        <li class="flex items-start space-x-2.5">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-navy-600 dark:text-blue-400 shrink-0 mt-1"></i>
+                            <span>Managed digital office operations, computer systems, and online portals to ensure smooth daily administrative workflow.</span>
+                        </li>
+                        <li class="flex items-start space-x-2.5">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-navy-600 dark:text-blue-400 shrink-0 mt-1"></i>
+                            <span>Handled online visa and passport processing, international travel documentation, and regulatory compliance tasks.</span>
+                        </li>
+                        <li class="flex items-start space-x-2.5">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-navy-600 dark:text-blue-400 shrink-0 mt-1"></i>
+                            <span>Maintained financial records, tracked operational expenses, and assisted with routine accounting and bookkeeping.</span>
+                        </li>
+                        <li class="flex items-start space-x-2.5">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-navy-600 dark:text-blue-400 shrink-0 mt-1"></i>
+                            <span>Supported Human Resources (HR) functions, including employee record-keeping, onboarding documentation, and internal correspondence.</span>
+                        </li>
+                    </ul>
+
+                    <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap gap-2">
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Visa & Passport Portals</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Financial & Expense Tracking</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">HR Record-Keeping</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Digital Office Systems</span>
+                    </div>
+                </article>
+
+                <!-- Role 2: BRAC University Esports Club -->
+                <article data-exp-type="leadership" class="exp-card glass-card bg-white/85 dark:bg-slate-900/85 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-navy-600/50 transition-all">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200/70 dark:border-slate-800">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="trophy" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white">Management Team Member & Campus Ambassador</h3>
+                                <p class="text-sm font-semibold text-navy-700 dark:text-blue-400">BRAC University Esports Club (BUESC)</p>
+                            </div>
+                        </div>
+                        <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 border border-indigo-200/70 dark:border-indigo-800/60 self-start sm:self-center">
+                            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                            <span>Leadership & PR</span>
+                        </span>
+                    </div>
+
+                    <ul class="mt-5 space-y-2.5 text-sm text-slate-600 dark:text-slate-300">
+                        <li class="flex items-start space-x-2.5">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-navy-600 dark:text-blue-400 shrink-0 mt-1"></i>
+                            <span>Spearheaded public relations campaigns and coordinated large-scale registration pipelines for inter-university events.</span>
+                        </li>
+                        <li class="flex items-start space-x-2.5">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-navy-600 dark:text-blue-400 shrink-0 mt-1"></i>
+                            <span>Managed sponsorship proposals and conducted strategic outreach to prominent corporate and tech enterprises.</span>
+                        </li>
+                        <li class="flex items-start space-x-2.5">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-navy-600 dark:text-blue-400 shrink-0 mt-1"></i>
+                            <span>Served as official Campus Ambassador for major inter-university events, driving participant engagement and operational efficiency.</span>
+                        </li>
+                    </ul>
+
+                    <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap gap-2">
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Public Relations</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Corporate Sponsorships</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Registration Pipelines</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Event Operations</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- EDUCATION SECTION -->
+        <section id="education" class="space-y-6">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-navy-600 dark:text-blue-400">03 / Academics</span>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold mt-1">Education</h2>
+            </div>
+
+            <div class="glass-card bg-white/85 dark:bg-slate-900/85 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200/70 dark:border-slate-800">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-navy-900 text-white flex items-center justify-center shrink-0">
+                            <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display text-xl font-bold text-slate-900 dark:text-white">Bachelor of Business Administration (BBA)</h3>
+                            <p class="text-sm font-semibold text-navy-700 dark:text-blue-400">BRAC University, Dhaka, Bangladesh</p>
+                        </div>
+                    </div>
+                    <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 self-start md:self-center">
+                        <i data-lucide="calendar" class="w-3.5 h-3.5 text-navy-600"></i>
+                        <span>Expected Graduation: 2029</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 space-y-3">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Relevant Coursework (Click to inspect focus area)</p>
+                    <div class="flex flex-wrap gap-2.5">
+                        <button onclick="showCourseInfo('Business Communication', 'Executive writing, corporate presentations, stakeholder negotiation, and cross-cultural business correspondence.')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 hover:border-navy-600 text-slate-800 dark:text-slate-200 transition-all">
+                            Business Communication
+                        </button>
+                        <button onclick="showCourseInfo('Microeconomics', 'Market supply-demand dynamics, pricing strategy, consumer behavior, and resource allocation efficiency.')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 hover:border-navy-600 text-slate-800 dark:text-slate-200 transition-all">
+                            Microeconomics
+                        </button>
+                        <button onclick="showCourseInfo('Quantitative Methods', 'Statistical data analysis, business forecasting, probability modeling, and data-driven decision making.')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 hover:border-navy-600 text-slate-800 dark:text-slate-200 transition-all">
+                            Quantitative Methods
+                        </button>
+                        <button onclick="showCourseInfo('Financial Accounting', 'Ledger preparation, balance sheets, income statements, expense tracking, and financial compliance fundamentals.')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 hover:border-navy-600 text-slate-800 dark:text-slate-200 transition-all">
+                            Financial Accounting
+                        </button>
+                        <button onclick="showCourseInfo('Management Principles', 'Organizational planning, team leadership, operational workflow design, and human resource coordination.')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 hover:border-navy-600 text-slate-800 dark:text-slate-200 transition-all">
+                            Management Principles
+                        </button>
+                    </div>
+                    <!-- Dynamic Coursework Info Box -->
+                    <div id="course-detail-banner" class="hidden mt-3 p-3.5 rounded-xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/60 text-xs text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                        <div>
+                            <strong id="course-detail-title" class="text-navy-900 dark:text-blue-300"></strong>: <span id="course-detail-desc"></span>
+                        </div>
+                        <button onclick="document.getElementById('course-detail-banner').classList.add('hidden')" class="ml-3 text-slate-400 hover:text-slate-700">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS MATRIX -->
+        <section id="skills" class="space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-navy-600 dark:text-blue-400">04 / Capabilities</span>
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold mt-1">Skills & Competencies</h2>
+                </div>
+
+                <!-- Category Filter Pills -->
+                <div class="no-print flex flex-wrap gap-1.5">
+                    <button onclick="filterSkills('all', this)" class="skill-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-navy-900 dark:bg-navy-600 text-white transition-all">All</button>
+                    <button onclick="filterSkills('admin', this)" class="skill-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-navy-600 transition-all">Admin & Finance</button>
+                    <button onclick="filterSkills('core', this)" class="skill-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-navy-600 transition-all">Strategy & PR</button>
+                    <button onclick="filterSkills('tech', this)" class="skill-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-navy-600 transition-all">Digital & Tools</button>
+                    <button onclick="filterSkills('soft', this)" class="skill-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-navy-600 transition-all">Leadership & Soft</button>
+                </div>
+            </div>
+
+            <div id="skills-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Admin & Finance -->
+                <div data-skill-cat="admin" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-navy-700 dark:text-blue-400"><i data-lucide="file-check-2" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Admin & Finance</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Visa & Passport Processing</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Online portal submissions, travel documentation, and compliance tracking.</p>
+                </div>
+
+                <div data-skill-cat="admin" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-navy-700 dark:text-blue-400"><i data-lucide="receipt" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Admin & Finance</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Financial & Expense Tracking</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Financial record-keeping, operational expense logs, and bookkeeping support.</p>
+                </div>
+
+                <div data-skill-cat="admin" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-navy-700 dark:text-blue-400"><i data-lucide="user-plus" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Admin & Finance</span>
+                    </div>
+                    <h3 class="font-bold text-sm">HR Support & Onboarding</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Employee record-keeping, onboarding files, and internal correspondence.</p>
+                </div>
+
+                <div data-skill-cat="admin" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-navy-700 dark:text-blue-400"><i data-lucide="folder-kanban" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Admin & Finance</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Documentation Management</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Structured digital archiving, verification, and institutional record accuracy.</p>
+                </div>
+
+                <!-- Core Competencies -->
+                <div data-skill-cat="core" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400"><i data-lucide="compass" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Strategy & PR</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Strategic Planning & PR</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Public relations campaigns, brand messaging, and corporate outreach.</p>
+                </div>
+
+                <div data-skill-cat="core" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400"><i data-lucide="calendar-check" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Strategy & PR</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Project & Event Coordination</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Large-scale registration pipelines, logistics, and inter-university execution.</p>
+                </div>
+
+                <div data-skill-cat="core" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400"><i data-lucide="handshake" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Strategy & PR</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Corporate Communications</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Sponsorship proposals, enterprise pitching, and stakeholder relations.</p>
+                </div>
+
+                <!-- Technical & Digital Tools -->
+                <div data-skill-cat="tech" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400"><i data-lucide="table" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Digital & Tools</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Microsoft Office & Workspace</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Excel, Word, PowerPoint, Google Sheets, Docs, and cloud collaboration.</p>
+                </div>
+
+                <div data-skill-cat="tech" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400"><i data-lucide="palette" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Digital & Tools</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Canva & Basic Web Design</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Digital media creatives, presentation decks, and modern web layouts.</p>
+                </div>
+
+                <div data-skill-cat="tech" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400"><i data-lucide="monitor" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Digital & Tools</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Computer Systems Operation</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Office hardware/software administration, online web portals, and troubleshooting.</p>
+                </div>
+
+                <!-- Soft Skills -->
+                <div data-skill-cat="soft" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400"><i data-lucide="award" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Leadership & Soft</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Team Leadership & Collaboration</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Cross-functional coordination, student mentoring, and peer leadership.</p>
+                </div>
+
+                <div data-skill-cat="soft" class="skill-item glass-card bg-white/85 dark:bg-slate-900/85 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="p-2 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400"><i data-lucide="mic" class="w-4 h-4"></i></span>
+                        <span class="text-[11px] font-semibold text-slate-400 uppercase">Leadership & Soft</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Public Speaking & Problem Solving</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Clear audience engagement, rapid operational resolution, and adaptability.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXTRACURRICULAR ACTIVITIES & ACHIEVEMENTS -->
+        <section id="achievements" class="space-y-6">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-navy-600 dark:text-blue-400">05 / Involvement</span>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold mt-1">Extracurricular Activities & Achievements</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="glass-card bg-white/85 dark:bg-slate-900/85 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <div class="w-11 h-11 rounded-2xl bg-navy-900 text-white flex items-center justify-center">
+                            <i data-lucide="badge-check" class="w-5 h-5"></i>
+                        </div>
+                        <div class="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/70 text-navy-800 dark:text-blue-300 border border-blue-200/70 dark:border-blue-800">
+                            Ref Code: JnU_ES_09
+                        </div>
+                        <h3 class="font-display font-bold text-base">Official Campus Ambassador</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Represented BRAC University as Official Campus Ambassador for the <strong>Jagannath University Esports Carnival 2026</strong>, driving registrations and inter-campus outreach.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card bg-white/85 dark:bg-slate-900/85 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <div class="w-11 h-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center">
+                            <i data-lucide="users-round" class="w-5 h-5"></i>
+                        </div>
+                        <div class="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/70 text-indigo-800 dark:text-indigo-300 border border-indigo-200/70 dark:border-indigo-800">
+                            BRAC University Leadership
+                        </div>
+                        <h3 class="font-display font-bold text-base">FYAT & Admissions Volunteering</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Active participant in university orientation programs, volunteer admissions initiatives, and <strong>First Year Advising Team (FYAT)</strong> student mentorship sessions.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card bg-white/85 dark:bg-slate-900/85 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <div class="w-11 h-11 rounded-2xl bg-slate-800 dark:bg-slate-700 text-white flex items-center justify-center">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        </div>
+                        <div class="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                            Creative & Digital Media
+                        </div>
+                        <h3 class="font-display font-bold text-base">Digital Content & Creative Design</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Passionate contributor to digital media content creation, event branding visuals, and collaborative creative design projects.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION (Netlify Form Ready) -->
+        <section id="contact" class="no-print space-y-6">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-navy-600 dark:text-blue-400">06 / Connect</span>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold mt-1">Get in Touch</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Contact Info Card -->
+                <div class="lg:col-span-5 glass-card bg-white/85 dark:bg-slate-900/85 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <h3 class="font-display text-xl font-bold">Let’s collaborate or connect.</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Available for administrative operations, business internships, corporate outreach, and project coordination roles in Dhaka or remote environments.
+                        </p>
+
+                        <div class="space-y-3 pt-2">
+                            <div class="flex items-center space-x-3 text-sm">
+                                <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-navy-700 dark:text-blue-400 flex items-center justify-center shrink-0">
+                                    <i data-lucide="mail" class="w-4 h-4"></i>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-xs text-slate-500">Email</p>
+                                    <a href="mailto:mashshad027@gmail.com" class="font-semibold hover:text-navy-600 truncate block">mashshad027@gmail.com</a>
+                                </div>
+                                <button onclick="copyEmail()" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-navy-600 hover:text-white transition-colors">
+                                    Copy
+                                </button>
+                            </div>
+
+                            <div class="flex items-center space-x-3 text-sm">
+                                <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-navy-700 dark:text-blue-400 flex items-center justify-center shrink-0">
+                                    <i data-lucide="phone" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500">Phone</p>
+                                    <a href="tel:+8801886918693" class="font-semibold hover:text-navy-600">+880 1886 918693</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-3 text-sm">
+                                <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-navy-700 dark:text-blue-400 flex items-center justify-center shrink-0">
+                                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500">Location</p>
+                                    <p class="font-semibold">Dhaka, Bangladesh</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-200/70 dark:border-slate-800 flex items-center space-x-3">
+                        <a href="https://www.linkedin.com/in/mashfiqur-shadhin-956880333/" target="_blank" rel="noopener noreferrer" class="flex-1 inline-flex items-center justify-center space-x-2 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-navy-900 hover:text-white text-xs font-bold transition-all">
+                            <i data-lucide="linkedin" class="w-4 h-4"></i>
+                            <span>LinkedIn Profile</span>
+                        </a>
+                        <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="flex-1 inline-flex items-center justify-center space-x-2 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-900 hover:text-white text-xs font-bold transition-all">
+                            <i data-lucide="github" class="w-4 h-4"></i>
+                            <span>GitHub</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Netlify-Ready Interactive Form -->
+                <div class="lg:col-span-7 glass-card bg-white/85 dark:bg-slate-900/85 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+                    <form name="contact" method="POST" data-netlify="true" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                        <input type="hidden" name="form-name" value="contact">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="sender-name" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Your Name</label>
+                                <input id="sender-name" name="name" type="text" required placeholder="John Doe" class="w-full px-4 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-navy-600 transition-colors">
+                            </div>
+                            <div>
+                                <label for="sender-email" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Your Email</label>
+                                <input id="sender-email" name="email" type="email" required placeholder="you@company.com" class="w-full px-4 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-navy-600 transition-colors">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="sender-subject" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Subject</label>
+                            <input id="sender-subject" name="subject" type="text" required placeholder="Internship / Operations Opportunity / Collaboration" class="w-full px-4 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-navy-600 transition-colors">
+                        </div>
+                        <div>
+                            <label for="sender-message" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Message</label>
+                            <textarea id="sender-message" name="message" rows="4" required placeholder="Write your message here..." class="w-full px-4 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-navy-600 transition-colors"></textarea>
+                        </div>
+                        <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-navy-900 hover:bg-navy-800 dark:bg-navy-600 dark:hover:bg-navy-500 text-white font-semibold text-sm shadow-sm transition-all">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <span>Send Message</span>
+                        </button>
+                    </form>
+
+                    <!-- Non-blocking Toast Notification -->
+                    <div id="form-toast" class="hidden mt-4 p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold flex items-center space-x-2">
+                        <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
+                        <span>Thank you! Your message has been received.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Minimal Footer -->
+    <footer class="no-print relative z-10 border-t border-slate-200/70 dark:border-slate-800/70 py-8 text-center text-xs text-slate-500 dark:text-slate-400">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>&copy; 2026 Mashfiqur Shadhin Mon. All rights reserved.</p>
+            <p>Interactive 3D Portfolio &bull; Built for Desktop & Mobile</p>
+        </div>
+    </footer>
+
+    <!-- =====================================================================
+         INTERACTIVE LOGIC & THREE.JS 3D SCENE ENGINE
+         ===================================================================== -->
+    <script>
+        // 1. Initialize Icons & Config Links
+        lucide.createIcons();
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const imgEl = document.getElementById("profile-photo");
+            if (imgEl && PORTFOLIO_CONFIG.profileImageUrl) {
+                imgEl.src = PORTFOLIO_CONFIG.profileImageUrl;
+            }
+            const liEl = document.getElementById("hero-linkedin");
+            if (liEl) liEl.href = PORTFOLIO_CONFIG.linkedinUrl;
+        });
+
+        // 2. Dark / Light Mode Toggle with LocalStorage Persistence (Instant / 5ms)
+        const htmlRoot = document.documentElement;
+        const themeToggleBtn = document.getElementById("theme-toggle");
+        const mobileThemeToggleBtn = document.getElementById("mobile-theme-toggle");
+
+        if (localStorage.getItem("msm-theme") === "dark" || 
+           (!localStorage.getItem("msm-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+            htmlRoot.classList.add("dark");
+        }
+
+        function toggleThemeInstant() {
+            htmlRoot.classList.toggle("dark");
+            const isDark = htmlRoot.classList.contains("dark");
+            localStorage.setItem("msm-theme", isDark ? "dark" : "light");
+            updateThreeSceneColors(isDark);
+        }
+
+        if (themeToggleBtn) themeToggleBtn.addEventListener("click", toggleThemeInstant);
+        if (mobileThemeToggleBtn) mobileThemeToggleBtn.addEventListener("click", toggleThemeInstant);
+
+        // 3. Mobile Drawer Toggle
+        const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+        const mobileDrawer = document.getElementById("mobile-drawer");
+        mobileMenuBtn.addEventListener("click", () => {
+            mobileDrawer.classList.toggle("hidden");
+        });
+        document.querySelectorAll(".mobile-link").forEach(link => {
+            link.addEventListener("click", () => mobileDrawer.classList.add("hidden"));
+        });
+
+        // 4. Dynamic Role Typewriter Effect
+        const roleEl = document.getElementById("role-typewriter");
+        let roleIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeRoleLoop() {
+            const currentWord = PORTFOLIO_CONFIG.roles[roleIndex];
+            if (isDeleting) {
+                roleEl.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                roleEl.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let speed = isDeleting ? 35 : 65;
+            if (!isDeleting && charIndex === currentWord.length) {
+                speed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                roleIndex = (roleIndex + 1) % PORTFOLIO_CONFIG.roles.length;
+                speed = 350;
+            }
+            setTimeout(typeRoleLoop, speed);
+        }
+        typeRoleLoop();
+
+        // 5. Interactive Portrait 3D Tilt (Mouse & Touch Support)
+        const tiltCard = document.getElementById("portrait-tilt-card");
+        if (tiltCard) {
+            const applyTilt = (clientX, clientY) => {
+                const rect = tiltCard.getBoundingClientRect();
+                const x = (clientX - rect.left) / rect.width - 0.5;
+                const y = (clientY - rect.top) / rect.height - 0.5;
+                tiltCard.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 14}deg)`;
+            };
+            const resetTilt = () => {
+                tiltCard.style.transform = "rotateY(0deg) rotateX(0deg)";
+            };
+
+            tiltCard.addEventListener("mousemove", e => applyTilt(e.clientX, e.clientY));
+            tiltCard.addEventListener("mouseleave", resetTilt);
+            tiltCard.addEventListener("touchmove", e => {
+                if (e.touches.length > 0) applyTilt(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+            tiltCard.addEventListener("touchend", resetTilt);
+        }
+
+        // 6. Interactive Filter Functions (Experience & Skills)
+        function filterExperience(category, btn) {
+            document.querySelectorAll(".exp-filter-btn").forEach(b => {
+                b.classList.remove("bg-white", "dark:bg-slate-800", "text-slate-900", "dark:text-white", "shadow-sm");
+                b.classList.add("text-slate-600", "dark:text-slate-400");
+            });
+            btn.classList.add("bg-white", "dark:bg-slate-800", "text-slate-900", "dark:text-white", "shadow-sm");
+            btn.classList.remove("text-slate-600", "dark:text-slate-400");
+
+            document.querySelectorAll(".exp-card").forEach(card => {
+                if (category === "all" || card.dataset.expType === category) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        function filterSkills(category, btn) {
+            document.querySelectorAll(".skill-filter-btn").forEach(b => {
+                b.classList.remove("bg-navy-900", "dark:bg-navy-600", "text-white");
+                b.classList.add("bg-white", "dark:bg-slate-900", "border", "border-slate-200", "dark:border-slate-800", "text-slate-700", "dark:text-slate-300");
+            });
+            btn.classList.remove("bg-white", "dark:bg-slate-900", "border", "border-slate-200", "dark:border-slate-800", "text-slate-700", "dark:text-slate-300");
+            btn.classList.add("bg-navy-900", "dark:bg-navy-600", "text-white");
+
+            document.querySelectorAll(".skill-item").forEach(item => {
+                if (category === "all" || item.dataset.skillCat === category) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+
+        // 7. Coursework Details Preview
+        function showCourseInfo(title, desc) {
+            document.getElementById("course-detail-title").textContent = title;
+            document.getElementById("course-detail-desc").textContent = desc;
+            document.getElementById("course-detail-banner").classList.remove("hidden");
+        }
+
+        // 8. One-Click Clipboard Copy (Fallback-safe for iFrames & Mobile)
+        function copyEmail() {
+            const tempInput = document.createElement("input");
+            tempInput.value = PORTFOLIO_CONFIG.email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            const pill = document.getElementById("email-pill-text");
+            if (pill) {
+                const original = pill.textContent;
+                pill.textContent = "Copied to clipboard!";
+                setTimeout(() => { pill.textContent = original; }, 2000);
+            }
+        }
+
+        // 9. Contact Form Submission Handler (Works on Netlify + Local Preview)
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString()
+            })
+            .catch(() => {})
+            .finally(() => {
+                form.reset();
+                const toast = document.getElementById("form-toast");
+                toast.classList.remove("hidden");
+                setTimeout(() => toast.classList.add("hidden"), 5000);
+            });
+        }
+
+        // =================================================================
+        // 10. THREE.JS INTERACTIVE 3D BACKGROUND ENGINE (DESKTOP + MOBILE)
+        // =================================================================
+        let scene, camera, renderer, mainGroup, coreMesh, outerWire, ring1, ring2, particles;
+        let targetRotX = 0, targetRotY = 0;
+        let shapeMode = 0; // Cycles between 3 geometric sculptures
+
+        function initThreeJS() {
+            const container = document.getElementById("three-canvas-container");
+            if (!container || typeof THREE === "undefined") return;
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = window.innerWidth < 768 ? 11 : 8.5;
+
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0x2563eb, 1.4);
+            dirLight.position.set(5, 8, 7);
+            scene.add(dirLight);
+
+            const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.9);
+            rimLight.position.set(-6, -4, 4);
+            scene.add(rimLight);
+
+            mainGroup = new THREE.Group();
+            // Position slightly to the right on desktop for clean visual balance
+            mainGroup.position.x = window.innerWidth >= 1024 ? 2.4 : 0;
+            mainGroup.position.y = window.innerWidth >= 1024 ? 0.2 : 1.4;
+            scene.add(mainGroup);
+
+            // Option A: Load custom external .GLB 3D model if provided in PORTFOLIO_CONFIG
+            if (PORTFOLIO_CONFIG.customGlbModelUrl && typeof THREE.GLTFLoader !== "undefined") {
+                const loader = new THREE.GLTFLoader();
+                loader.load(
+                    PORTFOLIO_CONFIG.customGlbModelUrl,
+                    (gltf) => {
+                        const model = gltf.scene;
+                        model.scale.set(2, 2, 2);
+                        mainGroup.add(model);
+                    },
+                    undefined,
+                    () => buildProcedural3DModel() // Fallback to built-in 3D model if URL fails
+                );
+            } else {
+                // Option B: Built-in Procedural 3D Geometric Sculpture
+                buildProcedural3DModel();
+            }
+
+            // Ambient Floating Data Nodes (Particles)
+            const partGeo = new THREE.BufferGeometry();
+            const count = 90;
+            const positions = new Float32Array(count * 3);
+            for (let i = 0; i < count * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 18;
+            }
+            partGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+            const partMat = new THREE.PointsMaterial({ color: 0x2563eb, size: 0.055, transparent: true, opacity: 0.55 });
+            particles = new THREE.Points(partGeo, partMat);
+            scene.add(particles);
+
+            updateThreeSceneColors(htmlRoot.classList.contains("dark"));
+
+            // Desktop Mouse Interaction
+            window.addEventListener("mousemove", (e) => {
+                const nx = (e.clientX / window.innerWidth) * 2 - 1;
+                const ny = -(e.clientY / window.innerHeight) * 2 + 1;
+                targetRotY = nx * 0.85;
+                targetRotX = -ny * 0.65;
+            }, { passive: true });
+
+            // Mobile Touch / Swipe Interaction
+            window.addEventListener("touchmove", (e) => {
+                if (e.touches.length > 0) {
+                    const touch = e.touches[0];
+                    const nx = (touch.clientX / window.innerWidth) * 2 - 1;
+                    const ny = -(touch.clientY / window.innerHeight) * 2 + 1;
+                    targetRotY = nx * 1.1;
+                    targetRotX = -ny * 0.8;
+                }
+            }, { passive: true });
+
+            // Responsive Resize Handler
+            window.addEventListener("resize", () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.position.z = window.innerWidth < 768 ? 11 : 8.5;
+                mainGroup.position.x = window.innerWidth >= 1024 ? 2.4 : 0;
+                mainGroup.position.y = window.innerWidth >= 1024 ? 0.2 : 1.4;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // Cycle 3D Geometry Button
+            const cycleBtn = document.getElementById("cycle-3d-btn");
+            if (cycleBtn) {
+                cycleBtn.addEventListener("click", () => {
+                    shapeMode = (shapeMode + 1) % 3;
+                    rebuildGeometryShape(shapeMode);
+                });
+            }
+
+            animateThreeJS();
+        }
+
+        function buildProcedural3DModel() {
+            const coreGeo = new THREE.IcosahedronGeometry(1.45, 0);
+            const coreMat = new THREE.MeshPhysicalMaterial({
+                color: 0x1e3a8a,
+                metalness: 0.25,
+                roughness: 0.2,
+                transparent: true,
+                opacity: 0.22,
+                flatShading: true
+            });
+            coreMesh = new THREE.Mesh(coreGeo, coreMat);
+            mainGroup.add(coreMesh);
+
+            const wireGeo = new THREE.IcosahedronGeometry(1.65, 1);
+            const wireMat = new THREE.MeshBasicMaterial({
+                color: 0x2563eb,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.35
+            });
+            outerWire = new THREE.Mesh(wireGeo, wireMat);
+            mainGroup.add(outerWire);
+
+            const ringGeo1 = new THREE.TorusGeometry(2.35, 0.015, 16, 100);
+            const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x1e40af, transparent: true, opacity: 0.4 });
+            ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+            ring1.rotation.x = Math.PI / 3;
+            mainGroup.add(ring1);
+
+            const ringGeo2 = new THREE.TorusGeometry(2.75, 0.012, 16, 100);
+            const ringMat2 = new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.25 });
+            ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+            ring2.rotation.y = Math.PI / 4;
+            mainGroup.add(ring2);
+        }
+
+        function rebuildGeometryShape(mode) {
+            if (!coreMesh || !outerWire) return;
+            coreMesh.geometry.dispose();
+            outerWire.geometry.dispose();
+
+            if (mode === 0) {
+                coreMesh.geometry = new THREE.IcosahedronGeometry(1.45, 0);
+                outerWire.geometry = new THREE.IcosahedronGeometry(1.65, 1);
+            } else if (mode === 1) {
+                coreMesh.geometry = new THREE.OctahedronGeometry(1.55, 0);
+                outerWire.geometry = new THREE.DodecahedronGeometry(1.75, 0);
+            } else {
+                coreMesh.geometry = new THREE.TorusKnotGeometry(1.05, 0.32, 90, 16);
+                outerWire.geometry = new THREE.IcosahedronGeometry(1.85, 1);
+            }
+        }
+
+        function updateThreeSceneColors(isDark) {
+            if (!outerWire) return;
+            outerWire.material.color.setHex(isDark ? 0x60a5fa : 0x1e3a8a);
+            outerWire.material.opacity = isDark ? 0.32 : 0.22;
+            coreMesh.material.color.setHex(isDark ? 0x2563eb : 0x1e3a8a);
+            if (ring1) ring1.material.color.setHex(isDark ? 0x38bdf8 : 0x1e40af);
+            if (particles) particles.material.color.setHex(isDark ? 0x93c5fd : 0x1d4ed8);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+            const time = Date.now() * 0.0008;
+
+            if (mainGroup) {
+                // Smooth damping toward mouse/touch coordinates + gentle idle rotation
+                mainGroup.rotation.y += (targetRotY - mainGroup.rotation.y) * 0.05 + 0.0025;
+                mainGroup.rotation.x += (targetRotX - mainGroup.rotation.x) * 0.05;
+            }
+            if (outerWire) outerWire.rotation.z = time * 0.35;
+            if (ring1) ring1.rotation.z = -time * 0.5;
+            if (ring2) ring2.rotation.x = time * 0.4;
+            if (particles) particles.rotation.y = time * 0.12;
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener("load", initThreeJS);
+    </script>
+</body>
+</html>
